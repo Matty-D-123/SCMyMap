@@ -2,14 +2,22 @@ package matthewdurick.com.example.mymap;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.MarkerManager;
+import com.google.maps.android.SphericalUtil;
 
 import matthewdurick.com.example.mymap.databinding.ActivityMapsBinding;
 
@@ -17,6 +25,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +50,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID); // Changes Map Type to hybrid (Roads and Satellite)
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // Add a marker on Taylor Road
+        LatLng person = new LatLng(-27.570668, 153.234747);
+        Marker personMark = mMap.addMarker(new MarkerOptions()
+                .position(person)
+                .title("You Are Here")
+                .draggable(true)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+        // Add a marker on LINQ Precinct
+        LatLng linq = new LatLng(-27.568670, 153.233669);
+        Marker linqMark = mMap.addMarker(new MarkerOptions()
+                .position(linq)
+                .title("LINQ Precinct"));
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                linqMark.hideInfoWindow();
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+
+            }
+        });
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker){
+                if (marker.equals(linqMark)){
+                    Double distance; // Creates a double variable called distance
+                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), linq); // Sets distance variable as distance between two points
+                    int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
+                    toastMsg("Distance: " + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    linqMark.showInfoWindow();
+                    return true;
+                }
+                return false;
+            }
+        });
+        
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(person)); // Move the camera to centre over Taylor road marker
+        mMap.setMinZoomPreference(18); // the user cannot zoom out lower than 18 and makes 18 the default zoom
+
+
     }
+
+    public void toastMsg(String msg) {
+        Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG); //creates a pop up message
+        toast.show(); //displays message
+
+    }
+
+
 }
