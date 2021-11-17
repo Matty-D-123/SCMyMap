@@ -80,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMarkerDragStart(Marker marker) {
                 linqMark.hideInfoWindow(); //Hides title of LINQ marker when blue marker is dragged
-                adminMark.hideInfoWindow(); //Hides title of LINQ marker when blue marker is dragged
+                adminMark.hideInfoWindow(); //Hides title of Admin marker when blue marker is dragged
             }
 
             @Override
@@ -98,18 +98,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker){
                 if (marker.equals(linqMark)){
                     Double distance; // Creates a double variable called distance
-                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), linq); // Sets distance variable as distance between blue marker location and linq marker
+                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), marker.getPosition()); // Sets distance variable as distance between blue marker location and linq marker
                     int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
-                    toastMsg("Distance: " + easyDistance + "m"); //Brings up toast message that displays the int distance
-                    linqMark.showInfoWindow();
+                    toastMsg("Distance: " + marker.getTitle() + ": " + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    marker.showInfoWindow();
                     return true;
                 }
                 if (marker.equals(adminMark)){
                     Double distance; // Creates a double variable called distance
-                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), admin); // Sets distance variable as distance between blue marker location and admin marker
+                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), marker.getPosition()); // Sets distance variable as distance between blue marker location and admin marker
                     int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
-                    toastMsg("Distance: " + easyDistance + "m"); //Brings up toast message that displays the int distance
-                    adminMark.showInfoWindow(); //Show the title of the clicked marker
+                    toastMsg("Distance to " + marker.getTitle() +":" + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    marker.showInfoWindow(); //Show the title of the clicked marker
                     return true;
                 }
                 return false;
