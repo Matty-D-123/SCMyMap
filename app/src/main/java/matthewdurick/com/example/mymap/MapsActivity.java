@@ -61,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Marker personMark = mMap.addMarker(new MarkerOptions()
                 .position(person)
                 .title("You Are Here")
+                .snippet("long click to drag")
                 .draggable(true)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
@@ -71,16 +72,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .title("LINQ Precinct"));
 
         // Add a marker on the Admin Building
-        LatLng admin = new LatLng(-27.57028542942835, 153.23414048457647);
+        LatLng admin = new LatLng(-27.57038, 153.23420);
         Marker adminMark = mMap.addMarker(new MarkerOptions()
                 .position(admin)
                 .title("Admin Building"));
+
+        // Add a marker on the SLC
+        LatLng slc = new LatLng(-27.56999, 153.23409);
+        Marker slcMark = mMap.addMarker(new MarkerOptions()
+                .position(slc)
+                .title("SLC"));
+
+        // Add a marker on the Pavilion
+        LatLng pavil = new LatLng(-27.56979, 153.23363);
+        Marker pavilMark = mMap.addMarker(new MarkerOptions()
+                .position(pavil)
+                .title("Pavilion and Cafe 97"));
 
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
                 linqMark.hideInfoWindow(); //Hides title of LINQ marker when blue marker is dragged
                 adminMark.hideInfoWindow(); //Hides title of Admin marker when blue marker is dragged
+                slcMark.hideInfoWindow(); //Hides title of Admin marker when blue marker is dragged
+                pavilMark.hideInfoWindow(); //Hides title of Admin marker when blue marker is dragged
+
             }
 
             @Override
@@ -100,7 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Double distance; // Creates a double variable called distance
                     distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), marker.getPosition()); // Sets distance variable as distance between blue marker location and linq marker
                     int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
-                    toastMsg("Distance: " + marker.getTitle() + ": " + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    toastMsg("Distance to " + marker.getTitle() + ": " + easyDistance + "m"); //Brings up toast message that displays the int distance
                     marker.showInfoWindow();
                     return true;
                 }
@@ -108,7 +124,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Double distance; // Creates a double variable called distance
                     distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), marker.getPosition()); // Sets distance variable as distance between blue marker location and admin marker
                     int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
-                    toastMsg("Distance to " + marker.getTitle() +":" + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    toastMsg("Distance to " + marker.getTitle() +": " + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    marker.showInfoWindow(); //Show the title of the clicked marker
+                    return true;
+                }
+                if (marker.equals(slcMark)){
+                    Double distance; // Creates a double variable called distance
+                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), marker.getPosition()); // Sets distance variable as distance between blue marker location and admin marker
+                    int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
+                    toastMsg("Distance to " + marker.getTitle() +": " + easyDistance + "m"); //Brings up toast message that displays the int distance
+                    marker.showInfoWindow(); //Show the title of the clicked marker
+                    return true;
+                }
+                if (marker.equals(pavilMark)) {
+                    Double distance; // Creates a double variable called distance
+                    distance = SphericalUtil.computeDistanceBetween(personMark.getPosition(), marker.getPosition()); // Sets distance variable as distance between blue marker location and admin marker
+                    int easyDistance = (int) Math.round(distance); // Rounds the distance variable to an int (makes it easier to read in a toast)
+                    toastMsg("Distance to " + marker.getTitle() + ": " + easyDistance + "m"); //Brings up toast message that displays the int distance
                     marker.showInfoWindow(); //Show the title of the clicked marker
                     return true;
                 }
