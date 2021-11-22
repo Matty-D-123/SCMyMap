@@ -3,4 +3,5 @@
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="map_btn_text">Go To Map</string>
+    <string name="home_title">HOME</string>
 </resources>
